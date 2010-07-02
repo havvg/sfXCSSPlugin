@@ -25,7 +25,7 @@ class sfXCSSTools
       $folder = str_replace('//', '/', sfConfig::get('sf_web_dir') . DIRECTORY_SEPARATOR . $folder . DIRECTORY_SEPARATOR);
       if (!file_exists($folder))
       {
-        if (!mkdir($folder, 0777, true))
+        if (!@mkdir($folder, 0777, true))
         {
           throw new RuntimeException(self::EXCEPTION_COULD_NOT_CREATE_SAVE_FOR_WEB_DIR, 2);
         }
