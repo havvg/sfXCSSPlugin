@@ -21,8 +21,8 @@ class sfXCSSTools
   {
     if ($folder = sfConfig::get('app_xcssplugin_saveforweb', false))
     {
-      // replace doubled slashed from configuration value, if any
-      $folder = str_replace('//', '/', sfConfig::get('sf_web_dir') . DIRECTORY_SEPARATOR . $folder . DIRECTORY_SEPARATOR);
+      // replace doubled DS from configuration value, if any
+      $folder = str_replace(DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, sfConfig::get('sf_web_dir') . DIRECTORY_SEPARATOR . $folder . DIRECTORY_SEPARATOR);
       if (!file_exists($folder))
       {
         if (!@mkdir($folder, 0777, true))
@@ -33,8 +33,24 @@ class sfXCSSTools
 
       if (file_exists($folder) and is_writable($folder))
       {
+
         $filename = $folder . $filename;
-        return (bool) file_put_contents($filename, $xcss);
+        $result = (bool) file_put_contents($filename, $xcss);
+
+        if ($result)
+        {
+          chmod($filename, 0666);
+        }
+        else
+        {
+          /*
+           * In case we couldn't write it, we remove the file
+           * to be sure there is nothing left, we don't like.
+           */
+          unlink($filename);
+        }
+
+        return $result;
       }
       else
       {
@@ -58,7 +74,7 @@ class sfXCSSTools
 
     if ($dir === '')
     {
-      $dir = sfConfig::get('sf_cache_dir') . '/' . sfContext::getInstance()->getConfiguration()->getApplication() . '/' . sfContext::getInstance()->getConfiguration()->getEnvironment() . '/xcss/';
+      $dir = sfConfig::get('sf_cache_dir') . DIRECTORY_SEPARATOR . sfContext::getInstance()->getConfiguration()->getApplication() . DIRECTORY_SEPARATOR . sfContext::getInstance()->getConfiguration()->getEnvironment() . DIRECTORY_SEPARATOR . 'xcss' . DIRECTORY_SEPARATOR;
     }
 
     return $dir;
@@ -74,7 +90,7 @@ class sfXCSSTools
   {
     if (!file_exists(self::getCacheOutputDirectory()))
     {
-      return mkdir(self::getCacheOutputDirectory(), 0777, true);
+      return (mkdir(self::getCacheOutputDirectory(), 0777, true) and chmod(self::getCacheOutputDirectory(), 0777));
     }
     else
     {

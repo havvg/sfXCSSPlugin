@@ -41,6 +41,7 @@ class processAction extends sfAction
     }
 
     $this->xcss = file_get_contents($targetFile);
+    chmod($targetFile, 0666);
 
     return sfView::SUCCESS;
   }

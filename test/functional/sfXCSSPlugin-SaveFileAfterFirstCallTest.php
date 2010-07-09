@@ -1,7 +1,7 @@
 <?php
 require_once(dirname(__FILE__) . '/../../bootstrap/functional.php');
 
-# set up test env correctly
+// set up test env correctly
 sfConfig::set('app_xcssplugin_path_to_css_dir', sfConfig::get('sf_plugins_dir') . DIRECTORY_SEPARATOR . 'sfXCSSPlugin' . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . 'fixtures' . DIRECTORY_SEPARATOR . 'web' . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR);
 sfConfig::set('app_xcssplugin_saveforweb', 'xcss');
 
@@ -22,5 +22,6 @@ $limeTest->plan++;
 $filename = sfConfig::get('sf_web_dir') . DIRECTORY_SEPARATOR . 'xcss' . DIRECTORY_SEPARATOR . 'stylesheet.css';
 $limeTest->ok(file_exists($filename), 'File has been saved for web access.');
 
-# cleanup
+// cleanup
+$limeTest->plan++;
 $limeTest->ok(unlink($filename), 'File has been removed.');
